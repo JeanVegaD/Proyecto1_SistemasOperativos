@@ -302,7 +302,7 @@ public class Home extends javax.swing.JFrame {
         txt_hardiskMemory = new javax.swing.JLabel();
         pnl_execution = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
+        btn_next = new javax.swing.JButton();
         txt_executionTime = new javax.swing.JLabel();
         pnl_mainmemory = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
@@ -686,14 +686,15 @@ public class Home extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(69, 90, 100));
         jLabel4.setText("Execution time");
 
-        jButton4.setBackground(new java.awt.Color(69, 90, 100));
-        jButton4.setFont(new java.awt.Font("Microsoft YaHei UI", 1, 14)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("Siguiente");
-        jButton4.setBorder(null);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btn_next.setBackground(new java.awt.Color(69, 90, 100));
+        btn_next.setFont(new java.awt.Font("Microsoft YaHei UI", 1, 14)); // NOI18N
+        btn_next.setForeground(new java.awt.Color(255, 255, 255));
+        btn_next.setText("Next instruction");
+        btn_next.setBorder(null);
+        btn_next.setEnabled(false);
+        btn_next.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btn_nextActionPerformed(evt);
             }
         });
 
@@ -712,7 +713,7 @@ public class Home extends javax.swing.JFrame {
                     .addGroup(pnl_executionLayout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 1, Short.MAX_VALUE))
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btn_next, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(pnl_executionLayout.createSequentialGroup()
                 .addComponent(txt_executionTime, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -726,7 +727,7 @@ public class Home extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txt_executionTime, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_next, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
 
@@ -850,10 +851,17 @@ public class Home extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        compu.nextInstruction();
-        updateVisualElements();
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void btn_nextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nextActionPerformed
+        if(!compu.finishProgram()){
+            compu.nextInstruction();
+            updateVisualElements();
+        }
+        else{
+            btn_next.setEnabled(false);
+        }
+        
+        
+    }//GEN-LAST:event_btn_nextActionPerformed
 
     private void btn_loadFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_loadFilesActionPerformed
         JFileChooser chooser = new JFileChooser();
@@ -889,6 +897,7 @@ public class Home extends javax.swing.JFrame {
             compu.sendMessagetoOutput("execution started");
             btn_startExecution.setEnabled(false);
             btn_loadFiles.setEnabled(false);
+            btn_next.setEnabled(true);
         }else{
             compu.sendMessagetoOutput("please load some files first");
         }
@@ -941,8 +950,8 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel C2_processID;
     private javax.swing.JLabel C2_rt;
     private javax.swing.JButton btn_loadFiles;
+    private javax.swing.JButton btn_next;
     private javax.swing.JButton btn_startExecution;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

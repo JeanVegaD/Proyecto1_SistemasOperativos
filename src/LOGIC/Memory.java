@@ -34,7 +34,6 @@ public class Memory {
     
     //inserta en la lista de procesos que esta ejecutando la memoria
     public void insertInstructions (Process p_instructions){
-        p_instructions.setAC("prueba");
         this.instructions.add(p_instructions);
         this.memoryUsed+=p_instructions.getSizeOfInstructions();
         memoryUsed();

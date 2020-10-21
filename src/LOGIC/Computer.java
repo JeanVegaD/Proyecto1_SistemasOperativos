@@ -38,8 +38,8 @@ public class Computer {
     private Memory hardDisk = new Memory(512);
     
     /*Cores*/
-    private Core core1 = new Core();
-    private Core core2 = new Core();
+    private Core core1 = new Core(timeAndMemorySizeConfig,this);
+    private Core core2 = new Core(timeAndMemorySizeConfig,this);
     
     
     
@@ -264,6 +264,15 @@ public class Computer {
        
         increaseTime();
         
+    }
+    
+    
+    public boolean finishProgram(){
+        if(lastIdProcessLoad==processList.size() && processList.get(lastIdProcessLoad-1).getEstado().equals("finalized")){
+            return true;
+        }else{
+            return false;
+        }
     }
     
     
