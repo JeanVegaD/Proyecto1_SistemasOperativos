@@ -6,14 +6,16 @@
 package LOGIC;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 
 /**
  *
  * @author Jean
  */
-public class Core   {
-    
+public class Core {
+    private String name = "";
     private ArrayList<String> availableRegisters = new ArrayList<String>() ;
     private JSONObject timeAndMemorySizeConfig = new JSONObject();
     private LOGIC.Process currentProcess = null;
@@ -27,9 +29,10 @@ public class Core   {
     
     private boolean tempDX = false;
     
-    public Core(JSONObject p_timeAndMemorySizeConfig,LOGIC.Computer p_compu){
+    public Core(JSONObject p_timeAndMemorySizeConfig,LOGIC.Computer p_compu,String coreName){
         this.timeAndMemorySizeConfig = p_timeAndMemorySizeConfig;
         this.compu = p_compu;
+        this.name=coreName;
     }
 
     public Process getCurrentProcess() {
@@ -69,6 +72,11 @@ public class Core   {
     
     public void increasetime(){
         if(currentProcess!=null){
+            //aumentamo el tiempo de ejecucion 
+            int executionTime = Integer.parseInt(this.currentProcess.getTranscuredTime());
+            executionTime++;
+            this.currentProcess.setTranscuredTime(String.valueOf(executionTime));
+            //
             if(!this.currentProcess.getEstado().equals("wating")){
                 if(countInstruction<=instructions.size()-1){
                     if(remainingInsTime==0){
@@ -80,13 +88,13 @@ public class Core   {
                                 this.remainingInsTime = getTimeForInstruction(this.currentInstruction);
                             }
                         }
-                        
                     }
                     else{
                         this.remainingInsTime--; 
                     }  
                 }
                 else{
+                    this.currentProcess.setFinishTime(java.time.LocalTime.now().toString());
                     this.currentProcess.setEstado("finalized");
                     this.currentProcess = null;
 
@@ -116,11 +124,11 @@ public class Core   {
     public void executeInstruction(String inst){
         String[] subinst = inst.replace(",", "").split("\\s+");
         String type = subinst[0].toUpperCase();
-        for (String element: subinst) {
+        /*for (String element: subinst) {
             System.out.print(element);
             System.out.print("|");
         }
-        System.out.println("");
+        System.out.println("");*/
         
         switch(type){
             case "LOAD":
@@ -290,9 +298,10 @@ public class Core   {
                     if(subinst[1].toUpperCase().equals("20H")){
                         this.countInstruction=this.instructions.size();
                     }else if(subinst[1].toUpperCase().equals("09H")){
-                        compu.sendMessagetoOutput("DX: "+ this.currentProcess.getDX());
+                        compu.sendMessagetoOutput(this.name+ " / DX: "+ this.currentProcess.getDX());
+                        compu.sendMessagetoOutput(this.name+ " / enter to continue");
                     }else if(subinst[1].toUpperCase().equals("10H")){
-                        compu.sendMessagetoOutput("enter value: ");
+                        compu.sendMessagetoOutput(this.name+ " / enter value: ");
                         this.tempDX=true;
                     }else{
                         this.compu.sendMessagetoOutput("invalid instruction: " +inst);
@@ -549,9 +558,6 @@ public class Core   {
             this.remainingInsTime = getTimeForInstruction(this.currentInstruction);
         }
     }
-    
-    
-    
-    
-    
+
+       
 }

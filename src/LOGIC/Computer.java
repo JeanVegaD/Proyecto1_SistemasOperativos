@@ -5,6 +5,7 @@
  */
 package LOGIC;
 
+import UI.Statistics;
 import java.io.File;
 import org.json.simple.JSONObject;
 import java.util.ArrayList;
@@ -37,10 +38,12 @@ public class Computer {
     private Memory hardDisk = new Memory(512);
     
     /*Cores*/
-    private Core core1 = new Core(timeAndMemorySizeConfig,this);
-    private Core core2 = new Core(timeAndMemorySizeConfig,this);
+    private Core core1 = new Core(timeAndMemorySizeConfig,this,"core1");
+    private Core core2 = new Core(timeAndMemorySizeConfig,this,"core2");
     
     private ArrayList<Process> waitProcess = new ArrayList<Process>();
+    
+    private boolean inputWait = false;
     
    
     public Computer(){
@@ -107,7 +110,7 @@ public class Computer {
     // carga los al planificador de processos
     public void loadProcessfromFile(){
         for (int i = 0; i < loadFiles.size(); i++) {
-            Process tempProcess = new Process(processId,"new",loadFiles.get(i).getName(),loadFiles.get(i).getPath(),getNewColor());
+            Process tempProcess = new Process(processId,"new",loadFiles.get(i).getName(),loadFiles.get(i).getPath(),java.time.LocalTime.now().toString());
             processId++;
             processList.add(tempProcess);
         }
@@ -268,11 +271,19 @@ public class Computer {
     
     
     public boolean finishProgram(){
-        if(lastIdProcessLoad==processList.size() && processList.get(lastIdProcessLoad-1).getEstado().equals("finalized")){
-            return true;
-        }else{
-            return false;
+        boolean flag = true;
+        for(int i = 0 ;  i< processList.size(); i++){
+            if(!processList.get(i).getEstado().equals("finalized")){
+                flag = false;
+            }
         }
+        if(flag){
+            UI.Statistics stats = new Statistics();
+            stats.setResultProcess(this.processList);
+            stats.fillTable();
+            stats.setVisible(true);
+        }
+        return flag; 
     }
 
     public ArrayList<Process> getWaitProcess() {
@@ -286,9 +297,20 @@ public class Computer {
     public void addProcessToWait(LOGIC.Process p_process){
         this.waitProcess.add(p_process);
     }
+
+    public boolean isInputWait() {
+        return inputWait;
+    }
+
+    public void setInputWait(boolean inputWait) {
+        this.inputWait = inputWait;
+    }
+    
+    
     
     public void keyboardEnter(String entrada){
         if(waitProcess.size()!=0){
+            this.inputWait = true;
             if(waitProcess.get(0).getCPU()==1){
                 core1.continueExecution(entrada);
                 waitProcess.remove(0);

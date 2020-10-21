@@ -30,17 +30,21 @@ public class Process {
     private int CPU = -1;
     private String initTime = "0";
     private String transcuredTime  = "0";
+    private String finishTime = "";
     // ArrayList<String> files;
     private ArrayList<String> instructions = new  ArrayList<String>();
     private int sizeOfInstructions =0;
-    private Color rowColor;
+    //private Color rowColor;
     
-    public Process (int p_id,String p_Estado,String p_Name,String p_path,Color p_color){
+    
+  
+    
+    public Process (int p_id,String p_Estado,String p_Name,String p_path,String p_initTime){
         this.ID = p_id;
         this.estado = p_Estado;
         this.name = p_Name;
         readFile(Paths.get(p_path));
-        this.rowColor = p_color;
+        this.initTime= p_initTime;
     }
     
     //crea un array con las intrucciones obtenidas en del archivo
@@ -173,10 +177,15 @@ public class Process {
     public void setTranscuredTime(String transcuredTime) {
         this.transcuredTime = transcuredTime;
     }
-    
-    public Color getColor() {
-       return this.rowColor;
+
+    public String getFinishTime() {
+        return finishTime;
     }
+
+    public void setFinishTime(String finishTime) {
+        this.finishTime = finishTime;
+    }
+    
 
 
 }
