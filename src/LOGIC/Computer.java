@@ -8,7 +8,6 @@ package LOGIC;
 import java.io.File;
 import org.json.simple.JSONObject;
 import java.util.ArrayList;
-import LOGIC.Process;
 import java.awt.Color;
 import java.util.Random;
 
@@ -41,9 +40,9 @@ public class Computer {
     private Core core1 = new Core(timeAndMemorySizeConfig,this);
     private Core core2 = new Core(timeAndMemorySizeConfig,this);
     
+    private ArrayList<Process> waitProcess = new ArrayList<Process>();
     
-    
-    
+   
     public Computer(){
         setMemoryConfig();      //Se establece la memoria principal
         //System.out.println(timeAndMemorySizeConfig.get("STORE"));
@@ -66,6 +65,7 @@ public class Computer {
         timeAndMemorySizeConfig.put("ADD", 3);
         timeAndMemorySizeConfig.put("SUB", 3);
         timeAndMemorySizeConfig.put("INC", 1);
+        timeAndMemorySizeConfig.put("INT", 0);
         timeAndMemorySizeConfig.put("DEC", 1);
         timeAndMemorySizeConfig.put("DEC", 2);
         timeAndMemorySizeConfig.put("CMP", 2);
@@ -274,6 +274,33 @@ public class Computer {
             return false;
         }
     }
+
+    public ArrayList<Process> getWaitProcess() {
+        return waitProcess;
+    }
+
+    public void setWaitProcess(ArrayList<Process> waitProcess) {
+        this.waitProcess = waitProcess;
+    }
+    
+    public void addProcessToWait(LOGIC.Process p_process){
+        this.waitProcess.add(p_process);
+    }
+    
+    public void keyboardEnter(String entrada){
+        if(waitProcess.size()!=0){
+            if(waitProcess.get(0).getCPU()==1){
+                core1.continueExecution(entrada);
+                waitProcess.remove(0);
+            }else{
+                core2.continueExecution(entrada);
+                waitProcess.remove(0);
+            }
+        }
+    }
+    
+    
+    
     
     
     

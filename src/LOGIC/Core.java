@@ -25,6 +25,8 @@ public class Core   {
     
     private LOGIC.Computer compu;
     
+    private boolean tempDX = false;
+    
     public Core(JSONObject p_timeAndMemorySizeConfig,LOGIC.Computer p_compu){
         this.timeAndMemorySizeConfig = p_timeAndMemorySizeConfig;
         this.compu = p_compu;
@@ -67,24 +69,29 @@ public class Core   {
     
     public void increasetime(){
         if(currentProcess!=null){
-            if(countInstruction<=instructions.size()-1){
-                if(remainingInsTime==0){
-                    executeInstruction(this.currentInstruction);
-                    this.countInstruction++;
-                    if(countInstruction<=instructions.size()-1){
-                        this.currentInstruction = this.instructions.get(countInstruction);
-                        this.remainingInsTime = getTimeForInstruction(this.currentInstruction);
+            if(!this.currentProcess.getEstado().equals("wating")){
+                if(countInstruction<=instructions.size()-1){
+                    if(remainingInsTime==0){
+                        executeInstruction(this.currentInstruction);
+                        if(!this.currentProcess.getEstado().equals("wating")){
+                            this.countInstruction++;
+                            if(countInstruction<=instructions.size()-1){
+                                this.currentInstruction = this.instructions.get(countInstruction);
+                                this.remainingInsTime = getTimeForInstruction(this.currentInstruction);
+                            }
+                        }
+                        
                     }
+                    else{
+                        this.remainingInsTime--; 
+                    }  
                 }
                 else{
-                    this.remainingInsTime--; 
-                }  
-            }
-            else{
-                this.currentProcess.setEstado("finalized");
-                this.currentProcess = null;
+                    this.currentProcess.setEstado("finalized");
+                    this.currentProcess = null;
 
-            }
+                }  
+            } 
         }
     }
     
@@ -115,7 +122,6 @@ public class Core   {
         }
         System.out.println("");
         
-        //super
         switch(type){
             case "LOAD":
                 
@@ -279,14 +285,15 @@ public class Core   {
                 break;
             case "INT":
                 if(subinst.length == 2){
+                    this.currentProcess.setEstado("wating");
+                    compu.addProcessToWait(this.currentProcess);
                     if(subinst[1].toUpperCase().equals("20H")){
-                        
-                    }else if(subinst[1].toUpperCase().equals("20H")){
-                        
+                        this.countInstruction=this.instructions.size();
                     }else if(subinst[1].toUpperCase().equals("09H")){
-                        
+                        compu.sendMessagetoOutput("DX: "+ this.currentProcess.getDX());
                     }else if(subinst[1].toUpperCase().equals("10H")){
-                        
+                        compu.sendMessagetoOutput("enter value: ");
+                        this.tempDX=true;
                     }else{
                         this.compu.sendMessagetoOutput("invalid instruction: " +inst);
                     }   
@@ -522,7 +529,26 @@ public class Core   {
       } catch (NumberFormatException e) {  
          return false;  
       }  
-}
+    }
+    
+    
+    public void continueExecution(String entrada){
+        if(tempDX){
+            if(entrada.equals("")){
+                this.currentProcess.setDX("0");
+            }else{
+                this.currentProcess.setDX(entrada);
+            }
+            
+            this.tempDX=false;
+        }
+        this.currentProcess.setEstado("execution");
+        this.countInstruction++;
+        if(countInstruction<=instructions.size()-1){
+            this.currentInstruction = this.instructions.get(countInstruction);
+            this.remainingInsTime = getTimeForInstruction(this.currentInstruction);
+        }
+    }
     
     
     

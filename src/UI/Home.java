@@ -19,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 import LOGIC.Computer;
 import LOGIC.Memory;
 import java.awt.Component;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -277,7 +278,7 @@ public class Home extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         txt_output = new javax.swing.JTextPane();
-        jTextField1 = new javax.swing.JTextField();
+        txt_input = new javax.swing.JTextField();
         pnl_process = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -417,10 +418,15 @@ public class Home extends javax.swing.JFrame {
         txt_output.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
         jScrollPane3.setViewportView(txt_output);
 
-        jTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txt_input.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        txt_input.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txt_inputActionPerformed(evt);
+            }
+        });
+        txt_input.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_inputKeyPressed(evt);
             }
         });
 
@@ -435,7 +441,7 @@ public class Home extends javax.swing.JFrame {
                     .addGroup(pnl_elementsLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(0, 207, Short.MAX_VALUE))
-                    .addComponent(jTextField1))
+                    .addComponent(txt_input))
                 .addContainerGap())
         );
         pnl_elementsLayout.setVerticalGroup(
@@ -446,7 +452,7 @@ public class Home extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                .addComponent(txt_input, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -886,9 +892,9 @@ public class Home extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btn_loadFilesActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txt_inputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_inputActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txt_inputActionPerformed
 
     private void btn_startExecutionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_startExecutionActionPerformed
         if(compu.getSizeOfLoadFiles()>0){
@@ -906,6 +912,24 @@ public class Home extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_btn_startExecutionActionPerformed
+
+    private void txt_inputKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_inputKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+          compu.keyboardEnter(txt_input.getText());
+          txt_input.setText("");
+        }
+        else if(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+          txt_input.setEditable(true);
+        }else{
+            String value = txt_input.getText();
+            int l = value.length();
+            if (evt.getKeyChar() >= '0' && evt.getKeyChar() <= '9') {
+               txt_input.setEditable(true);
+            } else {
+               txt_input.setEditable(false);
+            }
+        }
+    }//GEN-LAST:event_txt_inputKeyPressed
 
     /**
      * @param args the command line arguments
@@ -972,7 +996,6 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lbl_hardisk;
     private javax.swing.JPanel pnl_elements;
     private javax.swing.JPanel pnl_elements1;
@@ -990,6 +1013,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JTable tbl_queue;
     private javax.swing.JLabel txt_executionTime;
     private javax.swing.JLabel txt_hardiskMemory;
+    private javax.swing.JTextField txt_input;
     private javax.swing.JLabel txt_mainMemoryPorcent;
     private javax.swing.JTextPane txt_output;
     // End of variables declaration//GEN-END:variables
